@@ -1,0 +1,97 @@
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+nav{
+  margin-top: 10vh;
+  height: 70px;
+  width: 900px;  
+  border-radius: 50px;
+}
+
+body{
+  height: 100vh;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items:start;
+}
+
+.h-full{
+  height: 100%;
+}
+.w-full{
+  width: 100%;
+}
+
+/*positions*/
+.relative{position: relative;}
+.absolute{position: absolute;}
+.t-90{top: 90px;}
+
+
+.flex{
+  display: flex;
+}
+.flex-col{
+  flex-direction: column;
+}
+.flex-center{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.justify-center{
+  justify-content: center;
+}
+.justify-between{
+  justify-content: space-between;
+}
+.justify-start{
+  justify-content: flex-start;
+}
+.justify-end{
+  justify-content: flex-end;
+}
+.items-end{align-items: end;}
+
+/*borders*/
+
+.border{
+  border: 1px solid black;
+}
+.border-bottom{
+  border-bottom: 1px solid #ccc;
+}
+.border-sides{
+  border-left: 1px solid lightgrey;
+  border-right: 1px solid lightgrey;
+}
+.border-shadow{
+  border-radius: 10px;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 3px 20px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+}
+.border-shadow-lite{
+  border-radius: 10px;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 3px 10px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+}
+
+
+
+/* padding */
+.p-10{
+  padding: 10px;
+}
+.mx-10{
+  margin: 0 10px;
+}
+.px-10{
+  padding: 0 10px;
+}
+.py-10{
+  padding: 10px 0;
+}
+.gap-10{
+  gap: 10px;
+}
