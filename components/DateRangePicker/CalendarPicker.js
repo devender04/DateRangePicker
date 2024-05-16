@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import "./Common.css"
 import Input from './Input';
 import DateRangePicker from './DateRangePicker';
@@ -15,12 +15,11 @@ const unmountedStyle = {
     animationFillMode: "forwards"
 };
 const CalendarPicker = ({ selectedStartDate, setSelectedStartDate, selectedEndDate, setSelectedEndDate, format, inputbox, disabledDates, monthOffset, actionbar, daysbar, runFn }) => {
-    // const [isMounted, setIsMounted] = useState(false);
+
     const [show, setShow] = useState(false);
-    console.log(show)
     const [currentMonth, setCurrentMonth] = useState(new Date());
     const [error, setError] = useState(null);
-    
+
     useEffect(() => {
         if (selectedStartDate && selectedEndDate) {
             handleError()
@@ -29,16 +28,27 @@ const CalendarPicker = ({ selectedStartDate, setSelectedStartDate, selectedEndDa
         }
     }, [selectedEndDate])
 
-    useEffect(()=>{
-        window.addEventListener('click', (e)=>{
-            if (!document.getElementById('navbar').contains(e.target)){
-                console.log('hi')
-                setSelectedStartDate(null)
-                setSelectedEndDate(null)
-                setShow(false)
-            }        
-        })
-    },[])
+    const ref = useRef(null);
+
+    useEffect(() => {
+        if (show) {
+            const outSideClick = (e) => {
+                if (!ref.current?.contains(e.target)) {
+                    if (error) {
+                        setSelectedStartDate(null)
+                        setSelectedEndDate(null)
+                    }
+                    setShow(false)
+                }
+            }
+            window.addEventListener('click', outSideClick)
+
+            return () => {
+                window.removeEventListener("click", outSideClick);
+            };
+        }
+    }, [ref, error, selectedEndDate, show])
+
 
     const handlePrevMonth = () => {
         setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1, 1));
@@ -64,6 +74,7 @@ const CalendarPicker = ({ selectedStartDate, setSelectedStartDate, selectedEndDa
         }
         runFn ? runFn() : null
     }
+
     const handleAddDays = (selectedStartDate, day) => {
         if (selectedStartDate) {
             const newDate = new Date(selectedStartDate.getFullYear(), selectedStartDate.getMonth(), selectedStartDate.getDate())
@@ -71,7 +82,6 @@ const CalendarPicker = ({ selectedStartDate, setSelectedStartDate, selectedEndDa
             return newDate
         }
     }
-    
 
     const handleError = () => {
         if (disabledDates) {
@@ -103,28 +113,27 @@ const CalendarPicker = ({ selectedStartDate, setSelectedStartDate, selectedEndDa
     }
 
     const showCalendar = () => {
-        if(error){
+        if (error) {
             setSelectedStartDate(null)
             setSelectedEndDate(null)
         }
-        setShow(!show) 
-        
+        setShow(!show)
     }
 
 
     return (
-        <div className='relative h-full flex-center' >
+        <div className='relative h-full flex-center' id='datepicker' ref={ref} >
             <div onClick={showCalendar} className='h-full flex-center' >
-                <Input inputbox={inputbox || 2} selectedStartDate={selectedStartDate} selectedEndDate={selectedEndDate} format={format}/>
+                <Input inputbox={inputbox || 2} selectedStartDate={selectedStartDate} selectedEndDate={selectedEndDate} format={format} />
             </div>
 
             {show &&
                 <div className={`calendar-container flex flex-col justify-between p-10 absolute t-90`}
                     style={show ? mountedStyle : unmountedStyle}
                     onAnimationEnd={() => {
-                        if (!show) {setShow(false)};
+                        if (!show) { setShow(false) };
                     }}
-                >   
+                >
                     <div className="w-full header">
                         <button onClick={handlePrevMonth}> {`${'<'}`} </button>
                         <button onClick={handleNextMonth}> {`${'>'}`} </button>

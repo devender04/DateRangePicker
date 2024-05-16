@@ -17,7 +17,7 @@ const Navbar = () => {
     console.log(startDate,endDate)
   }
   return (
-    <nav className='flex-center border-shadow-lite ' id='navbar'>
+    <nav className='flex-center border-shadow-lite '>
 
       <CalendarPicker
         selectedStartDate={startDate}
@@ -30,7 +30,7 @@ const Navbar = () => {
         monthOffset={2}                 
         daysbar={true}                 
         actionbar={true}             
-        runFn={handleClick}         
+        runFn={handleClick}
       />
 
     </nav>
