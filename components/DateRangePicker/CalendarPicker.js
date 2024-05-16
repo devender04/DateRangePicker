@@ -6,6 +6,7 @@ import Input from './Input';
 import DateRangePicker from './DateRangePicker';
 import ActionBar from './ActionBar';
 import Days from './Days';
+import BodyClick from './BodyClick';
 
 const mountedStyle = {
     animation: "Animation 250ms ease-in-out"
@@ -14,11 +15,13 @@ const unmountedStyle = {
     animation: "outAnimation 250ms ease-out",
     animationFillMode: "forwards"
 };
-const CalendarPicker = ({ selectedStartDate, setSelectedStartDate, selectedEndDate, setSelectedEndDate, format, inputbox, disabledDates, monthOffset, actionbar, daysbar, runFn }) => {
+const CalendarPicker = ({ selectedStartDate, setSelectedStartDate, selectedEndDate, setSelectedEndDate, format, inputbox, disabledDates, monthOffset, actionbar, daysbar, runFn, onbodyclick }) => {
 
     const [show, setShow] = useState(false);
     const [currentMonth, setCurrentMonth] = useState(new Date());
     const [error, setError] = useState(null);
+    const [showPopUp, setShowPopUp] = useState(false)
+    const [outClick, setOutClick] = useState(true)
 
     useEffect(() => {
         if (selectedStartDate && selectedEndDate) {
@@ -30,16 +33,20 @@ const CalendarPicker = ({ selectedStartDate, setSelectedStartDate, selectedEndDa
 
     const ref = useRef(null);
 
-    useEffect(() => {
+    useEffect(() => {   
         if (show) {
-            const outSideClick = (e) => {
-                if (!ref.current?.contains(e.target)) {
-                    if (error) {
-                        setSelectedStartDate(null)
-                        setSelectedEndDate(null)
+            const outSideClick = (e) => {              
+                if(outClick){
+                    if (!ref.current?.contains(e.target)) {
+                        if (error) {
+                            setSelectedStartDate(null)
+                            setSelectedEndDate(null)
+
+                        }
+                        setShowPopUp(true)
                     }
-                    setShow(false)
                 }
+                setOutClick(true)
             }
             window.addEventListener('click', outSideClick)
 
@@ -47,8 +54,7 @@ const CalendarPicker = ({ selectedStartDate, setSelectedStartDate, selectedEndDa
                 window.removeEventListener("click", outSideClick);
             };
         }
-    }, [ref, error, selectedEndDate, show])
-
+    }, [ref, error, outClick, selectedEndDate, show])
 
     const handlePrevMonth = () => {
         setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1, 1));
@@ -120,7 +126,6 @@ const CalendarPicker = ({ selectedStartDate, setSelectedStartDate, selectedEndDa
         setShow(!show)
     }
 
-
     return (
         <div className='relative h-full flex-center' id='datepicker' ref={ref} >
             <div onClick={showCalendar} className='h-full flex-center' >
@@ -157,6 +162,7 @@ const CalendarPicker = ({ selectedStartDate, setSelectedStartDate, selectedEndDa
                     {actionbar && <ActionBar onReset={handleReset} onConfirm={handleConfirm} error={error} start={selectedStartDate} end={selectedEndDate} />}
                 </div>
             }
+            {(onbodyclick && showPopUp) && <BodyClick showPopUp={showPopUp} setShowPopUp={setShowPopUp} setShow={setShow} setOutClick={setOutClick}/>}   
         </div>
     );
 };

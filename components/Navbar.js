@@ -31,6 +31,7 @@ const Navbar = () => {
         daysbar={true}                 
         actionbar={true}             
         runFn={handleClick}
+        onbodyclick= {true}
       />
 
     </nav>
